@@ -1,11 +1,9 @@
 import streamlit as st
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from streamlit_gsheets import GSheetsConnection
-import pandas as pd
-from datetime import datetime
+import requests
 import io
 
 # ==========================================
@@ -28,9 +26,8 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-title'>📋 FORM PARAMETER & RISIKO SAMPLE</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>VERSION 10.0 • INTEGRATED CLOUD DATABASE & LIVE GRAPHICS</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>VERSION 10.0 • INTEGRATED CLOUD DATABASE VIA GOOGLE PORTAL</div>", unsafe_allow_html=True)
 
-# Notifikasi Pintar untuk Operator (Fase 3: Komunikatif)
 st.markdown("""
     <div class='alert-box'>
         ⚠️ <b>PETUNJUK OPERATOR:</b> Pastikan data parameter diisi sesuai aktual trial mesin harian. 
@@ -205,7 +202,7 @@ metode_packing = st.text_area("📦 Metode Melipat & Packing", placeholder="Cont
 
 
 # ==========================================
-# PROSES SIMPAN CLOUD & GENERATE PDF
+# PROSES GENERATE PDF
 # ==========================================
 def generate_pdf_report():
     buffer = io.BytesIO()
@@ -268,43 +265,49 @@ if st.button("🚀 PROSES, KIRIM DATA CLOUD & UNDUH PDF", type="primary", use_co
     if not artikel:
         st.error("❌ Gagal Simpan! Nama Artikel/Buyer wajib diisi agar tidak tertukar di database pusat.")
     else:
-        with st.spinner("⏳ Menghubungkan ke server cloud & merekam data..."):
+        with st.spinner("⏳ Menghubungkan ke server cloud & merekam data via Google Portal..."):
             try:
-                # 🛠️ STRATEGI PIPA HUBUNGAN GOOGLE SHEETS LENGKAP
-                conn = st.connection("gsheets", type=GSheetsConnection)
+                # 🛠️ STRATEGI BYPASS VIA PINTU BELAKANG GOOGLE FORM MAS ANDREAS
+                form_url = "https://docs.google.com/forms/d/e/1FAIpQLScZwJVgxBbwh0dVnIKvkU4qVsQ5g-2mQ2MthW83A1zOsEpotw/formResponse"
                 
-                # Membaca data lama yang ada di sheet
-                df_lama = conn.read(ttl=0)
+                # Mengemas seluruh laporan teknis pabrik menjadi teks narasi rapi
+                teks_laporan_lengkap = f"""
+=== A. CUTTING & FUSING ===
+• Operator: {op_cutting}
+• Jenis Fabric: {jenis_fabric}
+• Metode Gelar/Potong: {metode_gelar} / {metode_potong}
+• Catatan Kritis Cutting: {critical_cutting}
+• Ringkasan Parameter Fusing: {" | ".join(fusing_data)}
+
+=== B. SEWING (JAHIT) ===
+• Operator Jahit: {op_sewing}
+• Settingan Mesin & SPI: {" | ".join(sewing_data)}
+• Perlengkapan (Song2/Sepatu): {song_song} / {sepatu_spesial}
+• Catatan Kritis Sewing: {critical_sewing}
+
+=== C. FINISHING & PACKING ===
+• Operator Finishing: {op_finishing}
+• Standar Kain Steam: {kain_final}
+• Parameter Aktual: Alat={alat_gosok}, Suhu={suhu_gosok}°C, Tekanan={bar_gosok}
+• Catatan Kritis Finishing: {critical_finishing}
+• Metode Melipat & Packing: {metode_packing}
+"""
                 
-                # Menyusun baris record data baru
-                data_baru = {
-                    "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "Artikel Buyer": artikel,
-                    "Op Cutting": op_cutting,
-                    "Jenis Fabric": jenis_fabric,
-                    "Metode Gelar": metode_gelar,
-                    "Metode Potong": metode_potong,
-                    "Critical Cutting": critical_cutting,
-                    "Data Fusing": " | ".join(fusing_data),
-                    "Op Sewing": op_sewing,
-                    "Data Setting Mesin": " | ".join(sewing_data),
-                    "Song Song": song_song,
-                    "Sepatu Spesial": sepatu_spesial,
-                    "Critical Sewing": critical_sewing,
-                    "Op Finishing": op_finishing,
-                    "Detail Parameter Finishing": f"Alat:{alat_gosok}, Kain:{kain_final}, Suhu:{suhu_gosok}C, Press:{bar_gosok}",
-                    "Critical Finishing Packing": critical_finishing,
+                # Menyelaraskan dengan id entry link rahasia milik Mas Andreas
+                payload = {
+                    "entry.1189946018": artikel,
+                    "entry.1323489576": teks_laporan_lengkap.strip()
                 }
                 
-                # Menggabungkan data baru ke data lama
-                df_baru = pd.concat([df_lama, pd.DataFrame([data_baru])], ignore_index=True)
+                # Tembak data langsung ke server Google Form (Bypass gembok)
+                response = requests.post(form_url, data=payload)
                 
-                # Menembakkan data final kembali ke Google Sheets cloud
-                conn.update(data=df_baru)
+                if response.status_code == 200 or response.ok:
+                    st.success("✅ BERHASIL 100%! Data harian sukses direkam otomatis di Google Sheets pusat Mas Andreas.")
+                else:
+                    st.warning("⚠️ Data terkirim, namun server merespon dengan status berbeda. Sila cek berkala file Google Sheets Mas.")
                 
-                st.success("✅ BERHASIL! Data berhasil direkam aman di pusat cloud Google Sheets.")
-                
-                # Lanjut memproses unduhan PDF lokal untuk operator
+                # Siapkan unduhan PDF lokal untuk operator lapangan
                 pdf_data = generate_pdf_report()
                 st.download_button(
                     label="📥 DOWNLOAD DOKUMEN PDF REKAPAN",
@@ -314,7 +317,7 @@ if st.button("🚀 PROSES, KIRIM DATA CLOUD & UNDUH PDF", type="primary", use_co
                     use_container_width=True
                 )
             except Exception as e:
-                st.error(f"❌ Terjadi gangguan pipa cloud: {e}")
-                st.warning("Tapi jangan khawatir, Mas tetap bisa mengunduh file PDF lokalnya di bawah ini:")
+                st.error(f"❌ Terjadi gangguan portal: {e}")
+                st.warning("Mas tetap bisa mengunduh file PDF lokalnya di bawah ini:")
                 pdf_data = generate_pdf_report()
                 st.download_button(label="📥 DOWNLOAD DOKUMEN PDF", data=pdf_data, file_name=f"RISIKO_SAMPLE_{artikel}.pdf", mime="application/pdf", use_container_width=True)
