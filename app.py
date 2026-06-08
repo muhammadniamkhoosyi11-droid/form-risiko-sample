@@ -122,7 +122,7 @@ if st.button("🚀 PROSES & KIRIM KE CLOUD GOOGLE", type="primary", use_containe
     else:
         with st.spinner("⏳ Menembak data ke Cloud Google Sheets Anda..."):
             try:
-                # FIX PERUBAHAN UTAMA: MENGGUNAKAN ID FORM ASLI MILIK MAS ANDREAS
+                # MENGGUNAKAN ID FORM ASLI MILIK GOOGLE FORM MAS ANDREAS
                 form_url = "https://docs.google.com/forms/d/e/1qKwX368iZkJSXQ2meJy16TaBHUxRAeybWyfsXYEdc2o/formResponse"
                 
                 teks_laporan_lengkap = f"""
