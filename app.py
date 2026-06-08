@@ -9,7 +9,7 @@ import io
 # ==========================================
 # KONFIGURASI HALAMAN UTAMA & MODERNISE TAMPILAN
 # ==========================================
-st.set_page_config(page_title="Form Risiko Sample V12", page_icon="📝", layout="centered")
+st.set_page_config(page_title="Form Risiko Sample V13", page_icon="📝", layout="centered")
 
 st.markdown("""
     <style>
@@ -24,7 +24,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-title'>📋 FORM PARAMETER & RISIKO SAMPLE</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>VERSION 12.0 • ASSET SYNC SUCCESS</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>VERSION 13.0 • FIX ID ADREAS SUCCESS</div>", unsafe_allow_html=True)
 
 # DATABASE INTEGRASI MESIN & JARUM LENGKAP
 DATABASE_MESIN = {
@@ -122,8 +122,8 @@ if st.button("🚀 PROSES & KIRIM KE CLOUD GOOGLE", type="primary", use_containe
     else:
         with st.spinner("⏳ Menembak data ke Cloud Google Sheets Anda..."):
             try:
-                # MENGGUNAKAN ID FORM ASLI MILIK GOOGLE FORM MAS ANDREAS
-                form_url = "https://docs.google.com/forms/d/e/1qKwX368iZkJSXQ2meJy16TaBHUxRAeybWyfsXYEdc2o/formResponse"
+                # REVISI FINAL: MENGGUNAKAN ID FORM ASLI MILIK MAS ANDREAS
+                form_url = "https://docs.google.com/forms/d/e/1FAIpQLScZwJVgxBbwh0dVnIKvkU4qVsQ5g-2mQ2MthW83A1zOsEpotw/formResponse"
                 
                 teks_laporan_lengkap = f"""
 [CUTTING AREA] 
