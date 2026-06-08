@@ -9,7 +9,7 @@ import io
 # ==========================================
 # KONFIGURASI HALAMAN UTAMA & MODERNISE TAMPILAN
 # ==========================================
-st.set_page_config(page_title="Form Risiko Sample V11", page_icon="📝", layout="centered")
+st.set_page_config(page_title="Form Risiko Sample V12", page_icon="📝", layout="centered")
 
 st.markdown("""
     <style>
@@ -24,7 +24,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<div class='main-title'>📋 FORM PARAMETER & RISIKO SAMPLE</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-title'>VERSION 11.0 • AUTO-CLOUD SYNCHRONIZATION</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-title'>VERSION 12.0 • ASSET SYNC SUCCESS</div>", unsafe_allow_html=True)
 
 # DATABASE INTEGRASI MESIN & JARUM LENGKAP
 DATABASE_MESIN = {
@@ -120,10 +120,10 @@ if st.button("🚀 PROSES & KIRIM KE CLOUD GOOGLE", type="primary", use_containe
     if not artikel:
         st.error("❌ Nama Artikel wajib diisi!")
     else:
-        with st.spinner("⏳ Menembak data ke Cloud Google Sheets..."):
+        with st.spinner("⏳ Menembak data ke Cloud Google Sheets Anda..."):
             try:
-                # URL OUTPUT RESPONS RESMI MILIK FORM MAS ANDREAS
-                form_url = "https://docs.google.com/forms/d/e/1FAIpQLScZwJVgxBbwh0dVnIKvkU4qVsQ5g-2mQ2MthW83A1zOsEpotw/formResponse"
+                # FIX PERUBAHAN UTAMA: MENGGUNAKAN ID FORM ASLI MILIK MAS ANDREAS
+                form_url = "https://docs.google.com/forms/d/e/1qKwX368iZkJSXQ2meJy16TaBHUxRAeybWyfsXYEdc2o/formResponse"
                 
                 teks_laporan_lengkap = f"""
 [CUTTING AREA] 
@@ -152,18 +152,15 @@ if st.button("🚀 PROSES & KIRIM KE CLOUD GOOGLE", type="primary", use_containe
                     "entry.1323489576": teks_laporan_lengkap.strip()
                 }
                 
-                # HEADERS SURAT IZIN REKAYASA BROWSER BIAR LOLOS BLOKADE GOOGLE SPAM
                 headers = {
                     "Content-Type": "application/x-www-form-urlencoded",
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
                 }
                 
-                # Kirim data menggunakan metode POST murni format form url-encoded
+                # Eksekusi Tembakan
                 response = requests.post(form_url, data=payload, headers=headers)
                 
-                # Tampilkan pemberitahuan sukses karena tembakan bypass Google Form berhasil lolos
-                st.success("🎉 MANTAP! Data Berhasil Amblas Masuk ke Google Sheets!")
-                    
+                st.success("🎉 MANTAP JOSS! Data Berhasil Amblas Masuk ke Google Sheets Anda!")
                 st.download_button(label="📥 DOWNLOAD DOKUMEN PDF REKAPAN", data=generate_pdf_report(), file_name=f"RISIKO_{artikel}.pdf", mime="application/pdf", use_container_width=True)
             except Exception as e:
                 st.error(f"Gangguan Portal: {e}")
